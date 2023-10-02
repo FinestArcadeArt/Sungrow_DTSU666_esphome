@@ -6,5 +6,5 @@ Check the manual! All the important things are mentioned there. The default devi
 
 Not all sensors are currently set up! work in progress
 
-OK?!
+OK?!!
 
