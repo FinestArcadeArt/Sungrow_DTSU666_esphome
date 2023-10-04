@@ -32,6 +32,14 @@ web_server:
 
 captive_portal:
 ###
+
+
+globals:
+  - id: chint_energy_cal
+    type: std::uint32_t
+    restore_value: yes
+    initial_value: '0'
+
 uart:
   id: mod_bus
   tx_pin: GPIO13 # connected to tx on modbus converter
@@ -339,3 +347,31 @@ sensor:
    accuracy_decimals: 3
    filters:
      - multiply: 0.001
+
+# Todo: use correct sensor name and mark the original sensor as internal
+ - platform: template
+   name: "Total Energy"
+   id: "energy_total"
+#   accuracy_decimals: 2
+#   unit_of_measurement: "°C"
+#   device_class: temperature
+#   state_class: measurement
+#   icon: mdi:thermometer
+   lambda: |-
+       return (id(chint_total_energy).state - id(chint_energy_cal));
+#   update_interval: 15s
+
+
+# Todo: Test lambda!
+button:
+  - platform: template
+    name: "Chin Chin reset total energy"
+    entity_category: "config"
+    on_press:
+      then:
+        - lambda: |-
+            id(chint_energy_cal) = id(chint_total_energy).state;
+  - platform: safe_mode
+    name: "Chin Chin Restart (Safe Mode)"
+  - platform: restart
+    name: "Chin Chin Restart"
