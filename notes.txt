@@ -1,0 +1,32 @@
+ - platform: modbus_controller
+   id: chint_active_power_phase_a
+   name: "chint active power phase 1"
+   address: 0x0164
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: U_QWORD
+   accuracy_decimals: 1
+   filters:
+     - multiply: 1
+
+ - platform: modbus_controller
+   id: chint_active_power_phase_b
+   name: "chint active power phase 2"
+   address: 0x0166
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: U_QWORD
+   accuracy_decimals: 1
+   filters:
+     - multiply: 1
+
+ - platform: modbus_controller
+   id: chint_active_power_phase_c
+   name: "chint active power phase 3"
+   address: 0x0168
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: U_QWORD
+   accuracy_decimals: 1
+   filters:
+     - multiply: 1

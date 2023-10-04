@@ -7,6 +7,7 @@ esp8266:
 
 # Enable logging
 logger:
+  level: WARN
 
 # Enable Home Assistant API
 api:
@@ -28,7 +29,6 @@ wifi:
 # Enable Web server
 web_server:
   port: 80
-  local: true
 
 captive_portal:
 ###
@@ -50,6 +50,7 @@ modbus_controller:
     modbus_id: modbus1
     update_interval: 1s
     setup_priority: -10
+    command_throttle: 20ms
 
 sensor:
 
@@ -164,15 +165,22 @@ sensor:
      - multiply: 0.1
 
  - platform: modbus_controller
+   id: chint_active_power_total
+   name: "chint active power total"
+   address: 0x016A
+   unit_of_measurement: "W"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
    id: chint_active_power_phase_a
    name: "chint active power phase 1"
    address: 0x0164
    unit_of_measurement: "W"
    register_type: holding
-   value_type: U_WORD
-   accuracy_decimals: 1
-   filters:
-     - multiply: 1
+   value_type: S_DWORD
+   accuracy_decimals: 0
 
  - platform: modbus_controller
    id: chint_active_power_phase_b
@@ -180,10 +188,8 @@ sensor:
    address: 0x0166
    unit_of_measurement: "W"
    register_type: holding
-   value_type: U_WORD
-   accuracy_decimals: 1
-   filters:
-     - multiply: 1
+   value_type: S_DWORD
+   accuracy_decimals: 0
 
  - platform: modbus_controller
    id: chint_active_power_phase_c
@@ -191,18 +197,145 @@ sensor:
    address: 0x0168
    unit_of_measurement: "W"
    register_type: holding
-   value_type: U_WORD
-   accuracy_decimals: 1
-   filters:
-     - multiply: 1
+   value_type: S_DWORD
+   accuracy_decimals: 0
 
  - platform: modbus_controller
-   id: chint_active_power_total
-   name: "chint active power total"
-   address: 0x007A
-   unit_of_measurement: "W"
+   id: chint_reactive_power_total
+   name: "chint reactive power total"
+   address: 0x0172
+   unit_of_measurement: "VAR"
    register_type: holding
-   value_type: U_WORD
-   accuracy_decimals: 1
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_a
+   name: "chint reactive power phase 1"
+   address: 0x016C
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_b
+   name: "chint reactive power phase 2"
+   address: 0x016E
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_reactive_power_phase_c
+   name: "chint reactive power phase 3"
+   address: 0x0170
+   unit_of_measurement: "VAR"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+   force_new_range: true
+
+ - platform: modbus_controller
+   id: chint_apparent_power_total
+   name: "chint apparent power total"
+   address: 0x017A
+   unit_of_measurement: "VA"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+   force_new_range: true
+
+ - platform: modbus_controller
+   id: chint_apparent_power_phase_a
+   name: "chint apparent power phase 1"
+   address: 0x0174
+   unit_of_measurement: "VA"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_apparent_power_phase_b
+   name: "chint apparent power phase 2"
+   address: 0x0176
+   unit_of_measurement: "VA"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_apparent_power_phase_c
+   name: "chint apparent power phase 3"
+   address: 0x0178
+   unit_of_measurement: "VA"
+   register_type: holding
+   value_type: S_DWORD
+   accuracy_decimals: 0
+
+ - platform: modbus_controller
+   id: chint_forward_energy_total
+   name: "chint energy total from grid"
+   address: 0x0000
+   unit_of_measurement: "kWh"
+   register_type: holding
+   value_type: U_DWORD
+   accuracy_decimals: 2
    filters:
-     - multiply: 1
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_reversing_energy_total
+   name: "chint energy total to grid"
+   address: 0x0014
+   unit_of_measurement: "kWh"
+   register_type: holding
+   value_type: U_DWORD
+   accuracy_decimals: 2
+   filters:
+     - multiply: 0.01
+
+ - platform: modbus_controller
+   id: chint_power_factor_total
+   name: "chint power factor total"
+   address: 0x017F
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: S_WORD
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_a
+   name: "chint power factor phase 1"
+   address: 0x017C
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: S_WORD
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_b
+   name: "chint power factor phase 2"
+   address: 0x017D
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: S_WORD
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
+
+ - platform: modbus_controller
+   id: chint_power_factor_phase_c
+   name: "chint power factor phase 3"
+   address: 0x017E
+   unit_of_measurement: "cosphi"
+   register_type: holding
+   value_type: S_WORD
+   accuracy_decimals: 3
+   filters:
+     - multiply: 0.001
